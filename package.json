@@ -1,0 +1,20 @@
+{
+  "name": "internship",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/ankitgtm111/LearnNode#readme",
+  "bugs": {
+    "url": "https://github.com/ankitgtm111/LearnNode/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ankitgtm111/LearnNode.git"
+  },
+  "license": "ISC",
+  "author": "Ankit",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
