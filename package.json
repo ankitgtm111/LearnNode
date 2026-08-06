@@ -13,10 +13,10 @@
   "license": "ISC",
   "author": "Ankit",
   "type": "commonjs",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js"  
+    "start": "node sevrer.js"  
   },
   "dependencies": {
     "express": "^5.2.1",
