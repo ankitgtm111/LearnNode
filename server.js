@@ -19,7 +19,7 @@ function requestLogger(req, res, next) {
 }
 
 function validateUser(req, res, next) {
-  if (!req.body.name) {
+  if (!req.body || !req.body.name) {
     return res.status(400).json({
       error: "Name is required",
     });
@@ -55,9 +55,25 @@ app.post("/users", validateUser, (req, res) => {
   res.status(201).json(newUser);
 });
 
+// 404 - Route not found
 app.use((req, res) => {
   res.status(404).json({
     error: "Route not found",
+  });
+});
+
+// 500 - Generic server error
+app.use((err, req, res, next) => {
+  //console.error(err);
+
+  if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
+    return res.status(400).json({
+      error: "Invalid JSON",
+    });
+  }
+
+  res.status(500).json({
+    error: "Internal Server Error",
   });
 });
 
