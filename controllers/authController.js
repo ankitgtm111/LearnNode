@@ -1,8 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { users } = require("../models/userModel");
 
-const SECRET_KEY = "abcd_1234";
-
 function getLoginPage(req, res) {
   res.render("login");
 }
@@ -25,7 +23,7 @@ function loginUser(req, res) {
     username: user.username,
   };
 
-  const token = jwt.sign(payload, SECRET_KEY, {
+  const token = jwt.sign(payload, process.env.JWT_SECRET, {
     expiresIn: "1h",
   });
 
