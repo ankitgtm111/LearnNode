@@ -2,13 +2,27 @@ const express = require("express");
 
 const app = express();
 
+const SECRET_KEY = "abcd_1234";
+
+const jwt = require("jsonwebtoken");
+
 app.use(requestLogger);
 
 app.use(express.json());
 
 let users = [
-  { id: 1, name: "Alice" },
-  { id: 2, name: "Bob" },
+  {
+    id: 1,
+    name: "Alice",
+    username: "admin",
+    password: "password123",
+  },
+  {
+    id: 2,
+    name: "Bob",
+    username: "student",
+    password: "learn2code",
+  },
 ];
 
 const PORT = 3000;
@@ -27,12 +41,68 @@ function validateUser(req, res, next) {
   next();
 }
 
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({
+      error: "Access denied. No token provided.",
+    });
+  }
+
+  jwt.verify(token, SECRET_KEY, (err, decodedData) => {
+    if (err) {
+      return res.status(403).json({
+        error: "Invalid or expired token.",
+      });
+    }
+
+    req.user = decodedData;
+    next();
+  });
+}
+
 app.get("/", (req, res) => {
   res.send("Welcome to the User Directory API");
 });
 
-app.get("/users", (req, res) => {
-  res.json(users);
+app.post("/login", (req, res) => {
+  const { username, password } = req.body;
+
+  const user = users.find(
+    (user) => user.username === username && user.password === password,
+  );
+
+  if (!user) {
+    return res.status(401).json({
+      error: "Invalid username or password",
+    });
+  }
+
+  const payload = {
+    id: user.id,
+    username: user.username,
+  };
+
+  const token = jwt.sign(payload, SECRET_KEY, {
+    expiresIn: "1h",
+  });
+
+  res.status(200).json({
+    message: "Login successful",
+    token: token,
+  });
+});
+
+app.get("/users", authenticateToken, (req, res) => {
+  res.status(200).json({
+    message: `Welcome, ${req.user.username}!`,
+    user: {
+      id: req.user.id,
+      username: req.user.username,
+    },
+  });
 });
 
 app.get("/users/:id", (req, res) => {
