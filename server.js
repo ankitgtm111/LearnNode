@@ -1,9 +1,10 @@
 require("dotenv").config();
+const mongoose = require("mongoose");
 const express = require("express");
 const helmet = require("helmet");
 const { globalLimiter } = require("./middleware/rateLimiters");
 const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/userRoutes");
+const studentRoutes = require("./routes/studentRoutes");
 const cors = require("cors");
 const sanitizeInput = require("./middleware/sanitizeInput");
 
@@ -39,7 +40,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(sanitizeInput);
 
 app.use("/", authRoutes);
-app.use("/", userRoutes);
+app.use("/", studentRoutes);
 
 const PORT = process.env.PORT || 3000;
 
@@ -76,6 +77,15 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => {
+    console.log("Successfully connected to MongoDB Atlas");
+
+    app.listen(PORT, () => {
+      console.log(`Server is running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error("MongoDB connection failed:", error.message);
+  });
