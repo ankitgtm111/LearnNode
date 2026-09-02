@@ -68,6 +68,9 @@ async function loginUser(req, res) {
     const payload = {
       id: user._id,
       username: user.username,
+      role: user.role,
+      assignedGrade: user.assignedGrade,
+      studentId: user.studentId ? user.studentId.toString() : null,
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET, {
