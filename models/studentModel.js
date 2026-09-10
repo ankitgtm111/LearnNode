@@ -5,6 +5,22 @@ const studentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
+  age: {
+    type: Number,
+    required: true,
+  },
+
+  grade: {
+    type: String,
+    required: true,
+  },
+
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
+
   enrolledCourses: [
     {
       type: mongoose.Schema.Types.ObjectId,
