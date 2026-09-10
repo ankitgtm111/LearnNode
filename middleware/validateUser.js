@@ -1,0 +1,11 @@
+function validateUser(req, res, next) {
+  if (!req.body || !req.body.name) {
+    return res.status(400).json({
+      error: "Name is required",
+    });
+  }
+
+  next();
+}
+
+module.exports = validateUser;
