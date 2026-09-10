@@ -91,14 +91,14 @@ function getMultipleCourses(courseIds) {
     });
 }
 
-connectDB().then(() => {
+connectDB().then(async () => {
   // seedDatabase();
 
-  // getStudentProfile("YOUR_STUDENT_ID");
+  const courses = await Course.find({
+    title: { $in: ["Mathematics", "Computer Science", "Physics"] },
+  });
 
-  getMultipleCourses([
-    "6a973cceae336085f2cc93eb",
-    "6a973cceae336085f2cc93ec",
-    "6a973cceae336085f2cc93ed",
-  ]);
+  const courseIds = courses.map((course) => course._id);
+
+  getMultipleCourses(courseIds);
 });
